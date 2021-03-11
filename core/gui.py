@@ -226,6 +226,7 @@ class SimpleGUI:
         # -------------- Magic code to integrate PyGame with tkinter -------
         w_id = graph.TKCanvas.winfo_id( )
         os.environ['SDL_WINDOWID'] = str(w_id)
-        os.environ['SDL_VIDEODRIVER'] = 'windib'  # change this to 'x11' to make it work on Linux
+        # os.environ['SDL_VIDEODRIVER'] = 'x11'  # change this to 'x11' to make it work on Linux
+        os.environ['SDL_VIDEODRIVER'] = 'windib'
 
         return window
