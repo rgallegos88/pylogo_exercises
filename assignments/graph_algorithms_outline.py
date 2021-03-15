@@ -1,7 +1,10 @@
 # Import the string constants you need (mainly keys) as well as classes and gui elements
 from core.graph_framework import (CLUSTER_COEFF, Graph_Node, Graph_World, PATH_LENGTH, TBD, graph_left_upper,
                                   graph_right_upper)
-from core.sim_engine import gui_set
+from core.sim_engine import gui_set, gui_get
+from core.pairs import center_pixel
+from core.link import Link
+from core.gui import STAR
 
 
 class Graph_Algorithms_World(Graph_World):
@@ -38,6 +41,36 @@ class Graph_Algorithms_World(Graph_World):
 
         Overrides this function from graph_framework.
         """
+
+        # ! central node is needed if graph type is wheel or star
+        center_node = None
+        if graph_type in ['wheel', 'star']:
+            center_node = Graph_Node()
+            center_node.move_to_xy(center_pixel())
+            print("the center node was created")
+
+            # ! The ring_list is empty
+        if not ring_node_list:
+            return
+
+        # ! if the graph type is wheel or star and there is only one node, link the lone node to itself 
+        if len(ring_node_list) == 1:
+            if graph_type in ['wheel', 'star']:
+                Link(center_node, ring_node_list[0])
+            return
+        for (node_a, node_b) in zip(ring_node_list, ring_node_list[1:] + [ring_node_list[0]]):
+            
+            if graph_type in ['wheel', 'ring']:
+                Link(node_a, node_b)
+            
+            if graph_type in ['wheel', 'star']:
+                Link(center_node, node_a)
+
+        
+        # ! complete the ring
+        if graph_type in ['wheel', 'ring']:
+            Link(ring_node_list[-1], ring_node_list[0])
+
         print("\n\nlink_nodes_for_graph: Your code goes here.")
 
 
