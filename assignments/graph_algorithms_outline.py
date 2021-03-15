@@ -1,8 +1,11 @@
 # Import the string constants you need (mainly keys) as well as classes and gui elements
-from core.graph_framework import (CLUSTER_COEFF, Graph_Node, Graph_World, PATH_LENGTH, TBD, graph_left_upper,
+from core.graph_framework import (CLUSTER_COEFF, Graph_Node, Graph_World, PATH_LENGTH, LINK_PROB, TBD, graph_left_upper,
                                   graph_right_upper)
-from core.sim_engine import gui_set
-
+from core.sim_engine import gui_set, gui_get
+from core.pairs import center_pixel
+from core.link import Link
+from core.gui import STAR
+from random import randint
 
 class Graph_Algorithms_World(Graph_World):
 
@@ -39,6 +42,51 @@ class Graph_Algorithms_World(Graph_World):
         Overrides this function from graph_framework.
         """
         print("\n\nlink_nodes_for_graph: Your code goes here.")
+
+        # ! central node is needed if graph type is wheel or star
+        center_node = None
+        if graph_type in ['wheel', 'star']:
+            center_node = Graph_Node()
+            center_node.move_to_xy(center_pixel())
+
+            # ! The ring_list is empty
+        if not ring_node_list:
+            return
+
+        # ! if the graph type is wheel or star and there is only one node, link the lone node to itself 
+        if len(ring_node_list) == 1:
+            if graph_type in ['wheel', 'star']:
+                Link(center_node, ring_node_list[0])
+            return
+        # ! there is more than one node
+        for (node_a, node_b) in zip(ring_node_list, ring_node_list[1:] + [ring_node_list[0]]):
+
+            # ! if user sets 4 nodes
+            # ! [1, 2, 3, 4] --> (1,2), (2,3), (3, 1) --> node 4 is the center node
+    
+
+            if graph_type in ['wheel', 'ring']:
+                Link(node_a, node_b)
+            
+            # ! the center node gets linked to each other node
+            # ! node 4 is linked to nodes 1, 2, 3 based on the example above
+            if graph_type in ['wheel', 'star']:
+                Link(center_node, node_a)
+
+        
+        # ! complete the ring
+        # if graph_type in ['wheel', 'ring']:
+        #     Link(ring_node_list[-1], ring_node_list[0])
+
+        if graph_type in ['random']:
+            link_probability = gui_get(LINK_PROB)
+            links = (Link(ring_node_list[i], ring_node_list[j]) 
+                                                for i in range(nbr_nodes - 1) 
+                                                for j in range(i + 1, nbr_nodes) 
+                                                if randint(1, 100) <= link_probability)
+            for _ in links:
+                pass
+            return
 
 
 if __name__ == '__main__':
