@@ -88,6 +88,24 @@ class Graph_Algorithms_World(Graph_World):
                 pass
             return
 
+        # Small World
+        if graph_type in['small world']:
+
+            link_probability = gui_get(LINK_PROB)
+            for i in range(nbr_nodes):
+                if randint(1,100) <= link_probability:
+                    #Link to 2 random nodes if we hit the link_probability
+                    for i in range(0,3):
+                        r = randint(1,nbr_nodes-1)
+                        if r != i:
+                            Link(ring_node_list[i],ring_node_list[r]) 
+
+                else:
+                    #Otherwise link to the next 2 nodes in line
+                    Link(ring_node_list[i],ring_node_list[(i+1)% nbr_nodes])
+                    Link(ring_node_list[i],ring_node_list[(i+2)% nbr_nodes]) 
+
+            return
 
 if __name__ == '__main__':
     from core.agent import PyLogo
