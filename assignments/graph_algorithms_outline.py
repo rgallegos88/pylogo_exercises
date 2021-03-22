@@ -88,17 +88,61 @@ class Graph_Algorithms_World(Graph_World):
                 pass
             return
 
+        # Preferential Attachment
+        if graph_type in ['pref attachment']:
+            Link(ring_node_list[0],ring_node_list[1])
+
+            most_links = 1
+            node_links = []
+
+            for x in range(nbr_nodes):
+                node_links.append(0)
+            node_links[0] = 1
+            node_links[1] = 1
+
+            for i in range(2,nbr_nodes):
+                for j in range(nbr_nodes):
+                        if node_links[j] > node_links[most_links]:
+                            most_links = j
+                degree = node_links[most_links]/(i + 2)
+
+                if most_links == 1:
+                    first_link = randint(0,1)
+                    Link(ring_node_list[i],ring_node_list[first_link])
+                    node_links[first_link] = 2
+                    node_links[i] = 1
+                    most_links = first_link
+
+                else:
+
+                    random_Number = randint(1,10)/10
+                    if random_Number >= degree:
+                        random_Node = randint(1, nbr_nodes-1)
+                        if random_Node != i:
+                            Link(ring_node_list[i],ring_node_list[random_Node])
+                            node_links[random_Node] += 1
+                            node_links[i] += 1
+                        else:
+                            Link(ring_node_list[i],ring_node_list[(i+1)%nbr_nodes])
+                            node_links[i] += 1    
+                        
+                    else:
+                        Link(ring_node_list[i],ring_node_list[most_links])
+                        node_links[i] += 1
+                        node_links[most_links] += 1           
+            return
+
         # Small World
-        if graph_type in['small world']:
+        if graph_type in ['small world']:
 
             link_probability = gui_get(LINK_PROB)
             for i in range(nbr_nodes):
                 if randint(1,100) <= link_probability:
                     #Link to 2 random nodes if we hit the link_probability
                     for i in range(0,3):
-                        r = randint(1,nbr_nodes-1)
-                        if r != i:
-                            Link(ring_node_list[i],ring_node_list[r]) 
+                        random_Node = randint(1,nbr_nodes-1)
+                        if random_Node != i:
+                            Link(ring_node_list[i],ring_node_list[random_Node]) 
 
                 else:
                     #Otherwise link to the next 2 nodes in line
