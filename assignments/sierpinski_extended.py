@@ -21,6 +21,10 @@ class Sierpinski_Agent(Agent):
     def init_agent(self, starting_patch):
        pass
 
+    def __init__(self):
+        super().__init__()
+        self.label = str(self.id)
+
 class Sierpinski_Extended(World):
 
     def __init__(self, *args, **kwargs):
