@@ -12,15 +12,6 @@ from core.world_patch_block import World
 
 class Sierpinski_Agent(Agent):
 
-    def __init__(self, strategies, starting_patch):
-        super().__init__()
-        self.label = str(self.id)
-
-        self.init_agent(starting_patch)
-
-    def init_agent(self, starting_patch):
-       pass
-
     def __init__(self):
         super().__init__()
         self.label = str(self.id)
@@ -32,6 +23,7 @@ class Sierpinski_Extended(World):
 
     def setup(self):
         Agent.id = 0
+        SimEngine.
 
     def step(self):
        pass
